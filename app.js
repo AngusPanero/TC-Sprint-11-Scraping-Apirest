@@ -39,13 +39,45 @@ app.get("/noticias", (req, res) => {
     }
 });
 
-app.post("/noticias", (req, res ) => {
+//POST
+app.post("/crearNoticias", (req, res) => {
     const nuevaNoticia = {
         titulo: req.body.titulo,
         imagen: req.body.imagen,
         descripcion: req.body.descripcion,
         enlace: req.body.enlace,
     }
+    noticiasDos.push(nuevaNoticia);
+    res.redirect("/");
+})
+
+//UPDATE
+app.patch("/noticias/editar/:imagen", (req, res) => {
+    const imagenReq = decodeURIComponent(req.params.imagen);
+    const noticia = noticiasDos.find((noticia) => noticia.imagen === imagenReq)
+
+    if(!noticia){
+        return res.status(404).send(`<h1>404 - No se Ha Encontrado Nada</h1>`)
+    }
+
+    const { titulo, descripcion, enlace } = req.body
+
+    if(titulo !== undefined){
+        noticia.titulo = titulo
+    }
+
+    if(descripcion !== undefined){
+        noticia.descripcion = descripcion
+    }
+
+    if(enlace !== undefined){
+        noticia.enlace = enlace
+    }
+
+    res.status(200).json({
+        message: "Noticia actualizada con éxito",
+        noticiaActualizada: noticia,
+    });
 })
 
 app.use((req, res) => {
