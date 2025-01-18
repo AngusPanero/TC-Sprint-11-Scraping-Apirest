@@ -80,6 +80,20 @@ app.patch("/noticias/editar/:imagen", (req, res) => {
     });
 })
 
+//DELETE
+app.delete("/noticias/eliminar/:imagen", (req, res) => {
+    const imagenReq = decodeURIComponent(req.params.imagen);
+    const index = noticiasDos.findIndex((noticia) => noticia.imagen === imagenReq)
+
+    if(index === - 1){
+        return res.status(404).json({ error: "No Hay Más Noticias"  })
+    }
+
+    const eliminarNoticia = noticiasDos.splice(index, 1)
+    
+    res.json({ message: "Noticia Eliminada", noticia: eliminarNoticia[0] })
+})
+
 app.use((req, res) => {
     res.send(`<h1>404 - No se ha Encontrado la Página</h1>`)
 })
